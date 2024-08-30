@@ -5,14 +5,14 @@ export const signinApi = async (user) => {
         isSuccess: false,
         token: null,
         fieldErrors: [
-            {
+            { 
                 field: "",
                 defaultMessage: ""
             }
         ]
     }
     try {
-        const response = await instance .post("/auth/signin", user);
+        const response = await instance.post("/auth/signin", user);
         signinData = {
             isSuccess: true,
             token: response.data

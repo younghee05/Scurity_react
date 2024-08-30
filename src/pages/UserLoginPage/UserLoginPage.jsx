@@ -108,7 +108,7 @@ function UserLoginPage(props) {
             return; 
         }
         
-        localStorage.setItem("accessToken", "Bearer" + signinData.token.accessToken)
+        localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken)
         window.location.replace("/"); // 강제로 이 경로로 보내는... 
     }
 
