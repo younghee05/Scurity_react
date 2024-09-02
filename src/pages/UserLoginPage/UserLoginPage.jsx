@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signinApi } from "../../apis/signinApi";
+import { instance } from "../../apis/util/instance";
 
 const layout = css`
     display: flex;
@@ -71,6 +72,7 @@ const loginButton = css`
 `;
 
 function UserLoginPage(props) {
+    const navigate = useNavigate();
 
     const [ inputUser, setInputUser ] = useState({
         username: "",
@@ -92,7 +94,7 @@ function UserLoginPage(props) {
 
     const handleLoginSubmitOnClick = async () => {
         const signinData = await signinApi(inputUser);
-        if(!signinData.isSuccess) {
+        if(!signinData.isSuccess) { // 로그인 실패 했을 때(isSuccess가 false 일 때) 
             if(signinData.errorStatus === 'fieldError') {
                 showFieldErrorMessage(signinData.error);
             }
@@ -108,8 +110,18 @@ function UserLoginPage(props) {
             return; 
         }
         
-        localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken)
-        window.location.replace("/"); // 강제로 이 경로로 보내는... 
+        localStorage.setItem("accessToken", "Bearer " + signinData.token.accessToken); // 로그인 성공 시 token 값을 localStorage에 저장 
+
+        instance.interceptors.request.use(config => {
+            config.headers["Authorization"] = localStorage.getItem("accessToken");
+            return config;
+        });
+
+        if(window.history.length > 2) {
+            navigate(-1); // t(탭(창)) -> index(홈) -> 로그인 화면에 들어갔을 때 로그인 할 시 index로 돌아가는 (즉, 이전페이지로 돌아가는)
+            return;
+        }
+        navigate("/"); // 2이상이 아닌 경우 index 페이지로 넘어가는 
     }
 
     const showFieldErrorMessage = (fieldErrors) => {
