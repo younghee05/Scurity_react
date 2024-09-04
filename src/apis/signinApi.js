@@ -26,7 +26,9 @@ export const signinApi = async (user) => {
         if(typeof(response.data) === 'string') {
             signinData['errorStatus'] = "loginError";
             signinData['error'] = response.data;
-        } else {
+        } 
+        
+        if(typeof(response.data) === 'string') {
             signinData['errorStatus'] = "fieldError";
             signinData['error'] = response.data.map(fieldError => ({
                 field: fieldError.field, 

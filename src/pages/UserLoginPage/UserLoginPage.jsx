@@ -106,7 +106,10 @@ function UserLoginPage(props) {
                 };
                 setFieldErrorMessages(emptyFieldError);
                 alert(signinData.error);
-            }   
+            }
+
+            if(signinData)
+            
             return; 
         }
         
